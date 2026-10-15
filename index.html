@@ -85,10 +85,10 @@ input[type=file]{display:none}
 .char-actions button{font-size:11px;padding:4px 8px}.character-row .remove-char{width:100%;height:64px;align-self:stretch;border:var(--line-width) solid var(--line);border-radius:0;background:var(--panel-bg);color:var(--ink);padding:4px;font-size:.75em}
 .hidden{display:none!important}
 .theme-olympos{--page-bg:#f6f0e2;--card-bg:#fffdf7;--ink:#73552b;--line:#b89a5b;--panel-bg:rgba(255,253,247,.64)}
-.theme-titan{--page-bg:#18283a;--card-bg:#18283a;--ink:#eee4cf;--line:#b99a5e;--panel-bg:rgba(255,255,255,.055)}
-.theme-tartaros{--page-bg:#1d1a1a;--card-bg:#1d1a1a;--ink:#eadada;--line:#9b4144;--panel-bg:rgba(255,255,255,.035)}
+.theme-titan{--page-bg:#18283a;--card-bg:#18283a;--ink:#eee4cf;--line:#b99a5e;--panel-bg:rgba(61,80,99,.78)}
+.theme-tartaros{--page-bg:#1d1a1a;--card-bg:#1d1a1a;--ink:#eadada;--line:#9b4144;--panel-bg:rgba(74,56,60,.78)}
 .theme-xenos{--page-bg:#e7edf3;--card-bg:#e7edf3;--ink:#354a62;--line:#9aafc3;--panel-bg:rgba(255,255,255,.45)}
-.theme-fallen{--page-bg:#211e25;--card-bg:#211e25;--ink:#e8dfe9;--line:#8f718e;--panel-bg:rgba(255,255,255,.035)}
+.theme-fallen{--page-bg:#211e25;--card-bg:#211e25;--ink:#e8dfe9;--line:#8f718e;--panel-bg:rgba(73,58,77,.78)}
 
 .choice-editor{display:flex;flex-wrap:wrap;gap:6px}.choice-chip{border:1px solid #d3d5da;background:#fff;border-radius:7px;padding:7px 9px;font-size:12px;color:#333}.choice-chip.active{background:#263a5a;color:#fff;border-color:#263a5a}
 .selected-tags{display:flex;flex-wrap:wrap;align-content:flex-start;gap:5px;min-height:18px;overflow:visible}.preview-tag{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:3px 6px;font-size:var(--choice-tag-size,9pt);line-height:1.2;color:var(--choice-tag-color,var(--ink));background:var(--panel-bg);overflow-wrap:anywhere}
@@ -503,10 +503,10 @@ const $=id=>document.getElementById(id);
 const card=$('card');
 const themes={
  olympos: {title:'OLYMPOS',bg:'#f6f0e2',ink:'#73552b',line:'#b89a5b',panel:'#fffdf7'},
- titan:{title:'TITAN',bg:'#18283a',ink:'#eee4cf',line:'#b99a5e',panel:'#26374b'},
- tartaros:{title:'TARTAROS',bg:'#1d1a1a',ink:'#eadada',line:'#9b4144',panel:'#2a2424'},
+ titan:{title:'TITAN',bg:'#18283a',ink:'#eee4cf',line:'#b99a5e',panel:'#3d5063'},
+ tartaros:{title:'TARTAROS',bg:'#1d1a1a',ink:'#eadada',line:'#9b4144',panel:'#4a383c'},
  xenos:{title:'XENOS',bg:'#e7edf3',ink:'#354a62',line:'#9aafc3',panel:'#f6f9fc'},
- fallen:{title:'APSU',bg:'#211e25',ink:'#e8dfe9',line:'#8f718e',panel:'#302b34'}
+ fallen:{title:'APSU',bg:'#211e25',ink:'#e8dfe9',line:'#8f718e',panel:'#493a4d'}
 };
 let choices={genre:['가급구','빌대환','언압흐','베스탈','귀소'],tendency:['드림','HL','BL','GL','NCP','NPC×NPC','온리','1T1D','배려 O','배려 X'],fandom:['글','그림','썰','ai 짤','로그','소비','RT','마음','멘션','탐라 대화','인용 대화','일상','사담','욕설','우울','폭력','R-18','G-18','주접'],mine:['캐혐','욕설','견제','저격','R-18','G-18','실사'],ngMention:['무시','뮤트','블락','직멘 제외 무시 가능']};
 const initialChoices=Object.fromEntries(Object.entries(choices).map(([key,items])=>[key,[...items]]));
