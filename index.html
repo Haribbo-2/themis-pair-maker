@@ -42,8 +42,8 @@ input[type=file]{display:none}
 .preview-top strong{font-size:13px;color:#555}.pixel-size{font-size:12px;color:#263a5a;background:#fffdf7;border:1px solid #d8d0bd;border-radius:6px;padding:6px 9px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .canvas-wrap{width:1120px;max-width:none;margin:auto}
 .profile-card{
-  width:100%;aspect-ratio:1.5/1;min-height:540px;position:relative;overflow:hidden;
-  padding:2.4%;color:var(--ink);font-family:var(--font);font-size:var(--font-size);
+  width:100%;min-height:680px;position:relative;overflow:hidden;
+  padding:24px;color:var(--ink);font-family:var(--font);font-size:var(--font-size);
   background:var(--page-bg);border:var(--line-width) solid var(--line);
 }
 .profile-card:before{content:"";position:absolute;inset:0;background-image:var(--bg-image,none);background-size:cover;background-position:center;opacity:var(--bg-opacity,1);pointer-events:none;z-index:0}
@@ -65,6 +65,9 @@ input[type=file]{display:none}
 .content-edit{background:transparent;border:0;color:inherit;outline:none;resize:none;width:100%;min-height:96px;height:auto;flex:1;font:inherit;font-size:10pt;line-height:1.5;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}
 .middle{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto;gap:10px;min-height:0;padding:0}
 .info-box{border:var(--line-width) solid var(--line);background:var(--panel-bg);padding:9px 11px;display:flex;flex-direction:column;min-height:0;min-width:0}
+.info-box.ng-box{display:block;padding:0;border:0;background:transparent}
+.ng-section{min-width:0;min-height:64px;height:auto;padding:6px 11px;border:var(--line-width) solid var(--line);background:var(--panel-bg)}
+.ng-section+.ng-section{margin-top:6px}
 .info-box:nth-child(1){grid-column:1;grid-row:1}
 .info-box:nth-child(2){grid-column:2;grid-row:1}
 .info-box:nth-child(3){grid-column:1;grid-row:2}
@@ -89,16 +92,16 @@ input[type=file]{display:none}
 
 .choice-editor{display:flex;flex-wrap:wrap;gap:6px}.choice-chip{border:1px solid #d3d5da;background:#fff;border-radius:7px;padding:7px 9px;font-size:12px;color:#333}.choice-chip.active{background:#263a5a;color:#fff;border-color:#263a5a}
 .selected-tags{display:flex;flex-wrap:wrap;align-content:flex-start;gap:5px;min-height:18px;overflow:visible}.preview-tag{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:3px 6px;font-size:var(--choice-tag-size,9pt);line-height:1.2;color:var(--choice-tag-color,var(--ink));background:var(--panel-bg);overflow-wrap:anywhere}
-.choice-row-break{flex-basis:100%;height:0}
-.profile-card{aspect-ratio:auto;height:auto;min-height:686px;overflow:visible;overflow-wrap:anywhere}.card-inner{height:auto;grid-template-rows:auto auto auto;gap:12px}
-.middle{grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto;gap:10px;padding:4px 0}.info-box:nth-child(1){grid-column:1;grid-row:1}.info-box:nth-child(2){grid-column:2;grid-row:1}.info-box:nth-child(3){grid-column:1;grid-row:2}.info-box:nth-child(4){grid-column:2;grid-row:2}.info-box.extra-box{grid-column:3;grid-row:1 / span 2}.info-box{min-height:95px;height:auto;overflow:visible}.note{grid-column:3;grid-row:1 / span 2;min-height:0;height:auto;overflow:visible}.bottom{overflow:visible}
+.profile-card{aspect-ratio:auto;height:auto;min-height:680px;overflow:visible;overflow-wrap:anywhere}.card-inner{height:auto;grid-template-rows:auto auto auto;gap:10px}
+.middle{grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto;gap:10px;padding:3px 0}.info-box:nth-child(1){grid-column:1;grid-row:1}.info-box:nth-child(2){grid-column:2;grid-row:1}.info-box:nth-child(3){grid-column:1;grid-row:2}.info-box:nth-child(4){grid-column:2;grid-row:2}.info-box.extra-box{grid-column:3;grid-row:1 / span 2}.info-box{min-height:80px;height:auto;overflow:visible}.note{grid-column:3;grid-row:1 / span 2;min-height:0;height:auto;overflow:visible}.bottom{overflow:visible}
 .character-row{grid-template-columns:34% minmax(0,1fr) 18%;min-height:0;height:64px;gap:8px}.char-image{min-height:0;height:64px;max-height:64px}.char-fields{display:flex;align-items:center;justify-content:center;min-width:0}.char-name{height:64px;min-height:64px;text-align:center}.char-desc{display:none!important}.char-actions{margin-bottom:5px}
 
 @media (max-width:900px){
  .app{grid-template-columns:1fr}.controls{position:relative;max-height:none;border-right:0;border-bottom:1px solid #ddd}
  .preview-top{flex-wrap:wrap}
- .preview-area{padding:12px;overflow-x:auto}
- .canvas-wrap{width:1120px;max-width:none;margin:0}
+ .preview-area{padding:12px;overflow-x:hidden}
+ .canvas-wrap{width:100%;max-width:none;margin:0;overflow:hidden}
+ .canvas-wrap>.profile-card{width:1120px;transform:scale(var(--preview-scale,1));transform-origin:top left}
 }
 /* Latest layout adjustments */
 
@@ -287,7 +290,7 @@ input[type=file]{display:none}
   grid-template-columns:minmax(0,1fr) minmax(170px,29%);
   column-gap:24px;
   align-items:start;
-  min-height:245px;
+  min-height:215px;
   padding-bottom:0;
   border-bottom:var(--line-width) solid var(--line);
 }
@@ -419,7 +422,7 @@ input[type=file]{display:none}
 <div class="group">
 <h2>선택지 편집</h2>
 <div class="field"><label for="choiceTarget">선택지 항목</label><select id="choiceTarget">
-<option value="genre">THEMIS</option><option value="tendency">성향</option><option value="fandom">트윗</option><option value="mine">NG</option><option value="free">Free</option>
+<option value="genre">THEMIS</option><option value="tendency">성향</option><option value="fandom">트윗</option><option value="mine">NG</option><option value="ngMention">NG 언급 시</option><option value="free">Free</option>
 </select></div>
 <div class="field" hidden id="freeEditorField"><label for="freeEditor">Free 내용</label><textarea id="freeEditor" placeholder="자유롭게 적어주세요."></textarea></div>
 <div class="choice-editor" id="choiceEditor"></div>
@@ -475,7 +478,10 @@ input[type=file]{display:none}
 <div class="info-box"><h2 class="section-title">THEMIS</h2><div class="selected-tags" id="genrePreview"></div></div>
 <div class="info-box"><h2 class="section-title">성향</h2><div class="selected-tags" id="tendencyPreview"></div></div>
 <div class="info-box"><h2 class="section-title">트윗</h2><div class="selected-tags" id="fandomPreview"></div></div>
-<div class="info-box"><h2 class="section-title">NG</h2><div class="selected-tags" id="minePreview"></div></div>
+<div class="info-box ng-box">
+<div class="ng-section"><h2 class="section-title">NG</h2><div class="selected-tags" id="minePreview"></div></div>
+<div class="ng-section"><h2 class="section-title">NG 언급 시</h2><div class="selected-tags" id="ngMentionPreview"></div></div>
+</div>
 <div class="note note-swapped">
 <h2 class="section-title">Free</h2>
 <textarea class="content-edit" id="messagePreview" placeholder="자유롭게 적어주세요."></textarea>
@@ -502,13 +508,12 @@ const themes={
  xenos:{title:'XENOS',bg:'#e7edf3',ink:'#354a62',line:'#9aafc3',panel:'#f6f9fc'},
  fallen:{title:'APSU',bg:'#211e25',ink:'#e8dfe9',line:'#8f718e',panel:'#302b34'}
 };
-let choices={genre:['가급구','빌대환','언압흐','베스탈','귀소'],tendency:['드림','HL','BL','GL','NCP','NPC×NPC','온리','1T1D','배려 O','배려 X'],fandom:['글','그림','썰','ai 짤','로그','소비','RT','마음','멘션','탐라 대화','인용 대화','일상','사담','욕설','우울','폭력','R-18','G-18','주접'],mine:['캐혐','욕설','견제','저격','R-18','G-18','실사','무시','뮤트','블락','직멘 제외 무시 가능']};
-const ngFollowupOptions=new Set(['무시','뮤트','블락','직멘 제외 무시 가능']);
+let choices={genre:['가급구','빌대환','언압흐','베스탈','귀소'],tendency:['드림','HL','BL','GL','NCP','NPC×NPC','온리','1T1D','배려 O','배려 X'],fandom:['글','그림','썰','ai 짤','로그','소비','RT','마음','멘션','탐라 대화','인용 대화','일상','사담','욕설','우울','폭력','R-18','G-18','주접'],mine:['캐혐','욕설','견제','저격','R-18','G-18','실사'],ngMention:['무시','뮤트','블락','직멘 제외 무시 가능']};
 const initialChoices=Object.fromEntries(Object.entries(choices).map(([key,items])=>[key,[...items]]));
-let selected={genre:[],tendency:[],fandom:[],mine:[]};
+let selected={genre:[],tendency:[],fandom:[],mine:[],ngMention:[]};
 let activeTarget='genre', activeTextarea=null, bgUrl=null, avatarUrl=null;
-const choiceNames={genre:'THEMIS',tendency:'성향',fandom:'트윗',mine:'NG'};
-const tagContainers={genre:$('genrePreview'),tendency:$('tendencyPreview'),fandom:$('fandomPreview'),mine:$('minePreview')};
+const choiceNames={genre:'THEMIS',tendency:'성향',fandom:'트윗',mine:'NG',ngMention:'NG 언급 시'};
+const tagContainers={genre:$('genrePreview'),tendency:$('tendencyPreview'),fandom:$('fandomPreview'),mine:$('minePreview'),ngMention:$('ngMentionPreview')};
 function applyTheme(key){
  const custom=key==='custom'; $('customThemeTools').hidden=!custom;
  const t=themes[key]||{title:$('themeTitle').value||'MY THEME',bg:$('bgHex').value||'#ffffff',ink:$('inkHex').value||'#222222',line:$('lineHex').value||'#888888',panel:$('panelHex').value||'#f7f7f7'}; card.className='profile-card '+(custom?'theme-olympos':'theme-'+key);
@@ -564,9 +569,9 @@ function applyTextStyle(sizeId,colorId,hexId,targets){
  targets.forEach(el=>{if(el){el.style.fontSize=size;el.style.color=color;}});
 }
 function syncTextHex(colorId,hexId,apply){$(colorId).addEventListener('input',()=>{ $(hexId).value=$(colorId).value; apply(); });$(hexId).addEventListener('change',()=>{if(/^#[0-9a-f]{6}$/i.test($(hexId).value)){ $(colorId).value=$(hexId).value;apply(); }});}
-const choiceSectionKeys=['genre','tendency','fandom','mine','free'];
+const choiceSectionKeys=['genre','tendency','fandom','mine','ngMention','free'];
 const choiceColorState={};
-function choiceSectionTitle(key){return key==='free'?document.querySelector('.note .section-title'):tagContainers[key]?.closest('.info-box')?.querySelector('.section-title');}
+function choiceSectionTitle(key){return key==='free'?document.querySelector('.note .section-title'):tagContainers[key]?.parentElement?.querySelector('.section-title');}
 function ptValue(id){const value=Number($(id).value);return Number.isFinite(value)&&value>=1&&value<=200?value:null;}
 function applySectionTitleSize(){const size=ptValue('sectionTitleSize');if(size===null)return;const keys=$('sectionTitleSizeAll').checked?choiceSectionKeys:[$('choiceTarget').value];keys.forEach(key=>{const title=choiceSectionTitle(key);if(title)title.style.fontSize=size+'pt';});}
 function applyChoiceOptionSize(){const size=ptValue('choiceTextSize'),target=$('choiceTarget').value;if(size===null||target==='free')return;const keys=$('choiceTextSizeAll').checked?Object.keys(tagContainers):[target];keys.forEach(key=>tagContainers[key].style.setProperty('--choice-tag-size',size+'pt'));}
@@ -615,6 +620,9 @@ $('characterTextSize').addEventListener('change',applyCharacterText);syncTextHex
  $(a).addEventListener('input',e=>{$(b).value=e.target.value;if(b==='nicknamePreview'||b==='twitterPreview')fitProfileIdentity();});
  $(b).addEventListener('input',e=>$(a).value=e.target.value);
 });
+// Some mobile browsers emit change without input for a native select menu.
+$('age').addEventListener('change',e=>{$('agePreview').value=e.target.value;});
+$('agePreview').addEventListener('change',e=>{$('age').value=e.target.value;});
 const selectedProfileExtra=new Set();
 const profileExtraButtons=[...document.querySelectorAll('#profileExtraOptions [data-value]')];
 function renderProfileExtra(){
@@ -714,12 +722,15 @@ function renderChoiceEditor(){
  $('customOptionField').hidden=isFree;
  if(isFree){$('freeEditor').value=$('messagePreview').value;return;}
  const values=choices[target]||[];
- const ordered=target==='mine'?[...values.filter(v=>!ngFollowupOptions.has(v)),...values.filter(v=>ngFollowupOptions.has(v))]:values;
- let followupStarted=false;
- ordered.forEach(value=>{if(target==='mine'&&ngFollowupOptions.has(value)&&!followupStarted){appendChoiceRowBreak(host);followupStarted=true;}const b=document.createElement('button');b.type='button';b.className='choice-chip'+(selected[target].includes(value)?' active':'');b.textContent=value;b.addEventListener('click',()=>{selected[target]=selected[target].includes(value)?selected[target].filter(v=>v!==value):[...selected[target],value];renderChoiceEditor();renderSelectedTags();});host.append(b);});
+ values.forEach(value=>{const b=document.createElement('button');b.type='button';b.className='choice-chip'+(selected[target].includes(value)?' active':'');b.textContent=value;b.addEventListener('click',()=>{selected[target]=selected[target].includes(value)?selected[target].filter(v=>v!==value):[...selected[target],value];renderChoiceEditor();renderSelectedTags();});host.append(b);});
 }
-function appendChoiceRowBreak(host){const br=document.createElement('span');br.className='choice-row-break';br.setAttribute('aria-hidden','true');host.append(br);}
-function renderSelectedTags(){Object.keys(tagContainers).forEach(target=>{const host=tagContainers[target];host.innerHTML='';const values=selected[target];const first=target==='mine'?values.filter(v=>!ngFollowupOptions.has(v)):values;const followup=target==='mine'?values.filter(v=>ngFollowupOptions.has(v)):[];const appendTag=value=>{const tag=document.createElement('span');tag.className='preview-tag';tag.textContent=value;host.append(tag);};first.forEach(appendTag);if(first.length&&followup.length)appendChoiceRowBreak(host);followup.forEach(appendTag);});}
+function renderSelectedTags(){
+ const appendTag=(host,value)=>{const tag=document.createElement('span');tag.className='preview-tag';tag.textContent=value;host.append(tag);};
+ Object.keys(tagContainers).forEach(target=>{
+  const host=tagContainers[target];host.replaceChildren();
+  selected[target].forEach(value=>appendTag(host,value));
+ });
+}
 $('addOption').addEventListener('click',()=>{const target=$('choiceTarget').value,val=$('customOption').value.trim();if(target==='free')return;if(val&&!choices[target].includes(val)){choices[target].push(val);selected[target].push(val);$('customOption').value='';renderChoiceEditor();renderSelectedTags();}});
 $('customOption').addEventListener('keydown',e=>{if(e.key==='Enter')$('addOption').click();});
 const messageField=$('messagePreview');function fitMessage(){messageField.style.height='auto';const h=Math.max(96,messageField.scrollHeight);messageField.style.height=h+'px';messageField.style.overflow='visible';const note=messageField.closest('.note');if(note){note.style.height='auto';note.style.minHeight=(h+45)+'px';}}messageField.addEventListener('input',()=>{$('freeEditor').value=messageField.value;fitMessage();});messageField.addEventListener('change',fitMessage);$('freeEditor').addEventListener('input',e=>{messageField.value=e.target.value;fitMessage();queuePixelSizeUpdate();});fitMessage();
@@ -824,20 +835,32 @@ function fitProfileIdentity(){
 ['nicknamePreview','twitterPreview'].forEach(id=>$(id).addEventListener('input',fitProfileIdentity));
 window.addEventListener('resize',fitProfileIdentity);
 
+const exportScale=2;
+const basePngWidth=2240,basePngHeight=1360;
+const designWidth=basePngWidth/exportScale,designHeight=basePngHeight/exportScale;
+function fitMobilePreview(){
+ const wrap=card.parentElement;
+ if(window.innerWidth>900){wrap.style.removeProperty('--preview-scale');wrap.style.removeProperty('height');return;}
+ const scale=Math.min(1,wrap.clientWidth/designWidth);
+ if(!scale)return;
+ wrap.style.setProperty('--preview-scale',scale);
+ wrap.style.height=Math.ceil(card.offsetHeight*scale)+'px';
+}
 function getExportDimensions(){
  // Use the live card's actual rendered size so added characters and long text are included.
  const rect=card.getBoundingClientRect();
- const width=Math.max(1120,Math.ceil(Math.max(card.scrollWidth,rect.width)));
- const height=Math.max(686,Math.ceil(Math.max(card.scrollHeight,rect.height)));
+ const width=Math.max(designWidth,Math.ceil(Math.max(card.scrollWidth,rect.width)));
+ const height=Math.max(designHeight,Math.ceil(Math.max(card.scrollHeight,rect.height)));
  return {width,height};
 }
 function updatePixelSizeInfo(){
  const {width,height}=getExportDimensions();
- $('pixelSizeInfo').textContent=`PNG 저장 크기: ${width} × ${height} px`;
+ $('pixelSizeInfo').textContent=`PNG 저장 크기: ${width*exportScale} × ${height*exportScale} px`;
 }
 let pixelUpdateQueued=false;
-function queuePixelSizeUpdate(){if(pixelUpdateQueued)return;pixelUpdateQueued=true;requestAnimationFrame(()=>{pixelUpdateQueued=false;updatePixelSizeInfo();});}
+function queuePixelSizeUpdate(){if(pixelUpdateQueued)return;pixelUpdateQueued=true;requestAnimationFrame(()=>{pixelUpdateQueued=false;fitMobilePreview();updatePixelSizeInfo();});}
 document.addEventListener('input',queuePixelSizeUpdate);document.addEventListener('change',queuePixelSizeUpdate);
+window.addEventListener('resize',queuePixelSizeUpdate);
 if(window.ResizeObserver)new ResizeObserver(queuePixelSizeUpdate).observe(card);
 function loadHtml2Canvas(){
  if(window.html2canvas)return Promise.resolve(window.html2canvas);
@@ -863,37 +886,43 @@ function createCroppedExportCanvas(img){
  const frameRect=frame.getBoundingClientRect(),imageRect=img.getBoundingClientRect();
  const frameStyle=getComputedStyle(frame);
  const width=frame.clientWidth,height=frame.clientHeight;
+ const unscale=frameRect.width?frame.offsetWidth/frameRect.width:1;
+ const imageWidth=imageRect.width*unscale,imageHeight=imageRect.height*unscale;
  const canvas=document.createElement('canvas');canvas.className='export-cropped-canvas';
  const density=2;canvas.width=Math.max(1,Math.round(width*density));canvas.height=Math.max(1,Math.round(height*density));
  const ctx=canvas.getContext('2d');ctx.scale(canvas.width/width,canvas.height/height);
  if(frame.classList.contains('avatar')){ctx.beginPath();ctx.ellipse(width/2,height/2,width/2,height/2,0,0,Math.PI*2);ctx.clip();}
  const sourceWidth=img.naturalWidth,sourceHeight=img.naturalHeight;
- const coverScale=Math.max(imageRect.width/sourceWidth,imageRect.height/sourceHeight);
+ const coverScale=Math.max(imageWidth/sourceWidth,imageHeight/sourceHeight);
  const drawnWidth=sourceWidth*coverScale,drawnHeight=sourceHeight*coverScale;
  const cropX=Number(img.dataset.cropX??50)/100,cropY=Number(img.dataset.cropY??50)/100;
- const left=imageRect.left-frameRect.left-(parseFloat(frameStyle.borderLeftWidth)||0);
- const top=imageRect.top-frameRect.top-(parseFloat(frameStyle.borderTopWidth)||0);
- ctx.drawImage(img,left+(imageRect.width-drawnWidth)*cropX,top+(imageRect.height-drawnHeight)*cropY,drawnWidth,drawnHeight);
+ const left=(imageRect.left-frameRect.left)*unscale-(parseFloat(frameStyle.borderLeftWidth)||0);
+ const top=(imageRect.top-frameRect.top)*unscale-(parseFloat(frameStyle.borderTopWidth)||0);
+ ctx.drawImage(img,left+(imageWidth-drawnWidth)*cropX,top+(imageHeight-drawnHeight)*cropY,drawnWidth,drawnHeight);
  return canvas;
 }
 function prepareExportClone(){
  const clone=card.cloneNode(true);
  const {width}=getExportDimensions();
- clone.style.cssText += `;position:fixed!important;left:-100000px!important;top:0!important;width:${width}px!important;max-width:none!important;height:auto!important;min-height:686px!important;aspect-ratio:auto!important;overflow:visible!important;margin:0!important;transform:none!important;`;
+ clone.style.cssText += `;position:fixed!important;left:-100000px!important;top:0!important;width:${width}px!important;max-width:none!important;height:auto!important;min-height:${designHeight}px!important;aspect-ratio:auto!important;overflow:visible!important;margin:0!important;transform:none!important;`;
  const liveCropImages=[...card.querySelectorAll('.avatar img,.char-image img')];
  const cloneCropImages=[...clone.querySelectorAll('.avatar img,.char-image img')];
  liveCropImages.forEach((img,index)=>cloneCropImages[index].replaceWith(createCroppedExportCanvas(img)));
  clone.querySelectorAll('button,input[type=file],.character-crop-editor').forEach(el=>el.remove());
  clone.querySelectorAll('input,select,textarea').forEach(el=>{
   let value=el.value||'';
-  if(el.tagName==='SELECT')value=el.options[el.selectedIndex]?.text||value;
+  if(el.tagName==='SELECT'){
+   const liveSelect=el.id?card.querySelector('#'+el.id):null;
+   const source=liveSelect||el;
+   value=source.options[source.selectedIndex]?.textContent||source.value||'';
+  }
   const div=document.createElement('div');div.className='export-field '+(el.className||'');div.id=el.id;div.textContent=value||el.placeholder||'';
-  div.style.cssText='font:inherit;color:inherit;white-space:pre-wrap;overflow-wrap:anywhere;box-sizing:border-box;min-width:0;'; if(el.id==='nicknamePreview'||el.id==='twitterPreview'){const live=card.querySelector('#'+el.id);const computed=live?getComputedStyle(live):null;div.style.flex='0 0 auto';div.style.width=Math.ceil(live?.getBoundingClientRect().width||100)+'px';if(computed){div.style.font=computed.font;div.style.color=computed.color;div.style.lineHeight=computed.lineHeight;}}
+  div.style.cssText='font:inherit;color:inherit;white-space:pre-wrap;overflow-wrap:anywhere;box-sizing:border-box;min-width:0;'; if(el.id==='nicknamePreview'||el.id==='twitterPreview'){const live=card.querySelector('#'+el.id);const computed=live?getComputedStyle(live):null;div.style.flex='0 0 auto';div.style.width=Math.ceil(live?.offsetWidth||100)+'px';if(computed){div.style.font=computed.font;div.style.color=computed.color;div.style.lineHeight=computed.lineHeight;}}
   if(el.classList.contains('char-name')){
    const charId=el.closest('.character-row').dataset.char;
    const live=card.querySelector(`.character-row[data-char="${charId}"] .char-name`);
    const style=getComputedStyle(live||el),span=document.createElement('span');span.textContent=live?.value||div.textContent;span.style.cssText='min-width:0;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;';div.replaceChildren(span);
-   div.style.display='flex';div.style.alignItems='center';div.style.justifyContent=el.closest('#pesoCharacters')?'flex-end':'flex-start';div.style.width='100%';div.style.height=Math.max(100,Math.ceil(live?.getBoundingClientRect().height||0))+'px';div.style.minHeight='100px';div.style.padding='4px 2px';div.style.font=style.font;div.style.lineHeight=style.lineHeight;div.style.textAlign=style.textAlign;div.style.color=style.color;
+   div.style.display='flex';div.style.alignItems='center';div.style.justifyContent=el.closest('#pesoCharacters')?'flex-end':'flex-start';div.style.width='100%';div.style.height=Math.max(100,Math.ceil(live?.offsetHeight||0))+'px';div.style.minHeight='100px';div.style.padding='4px 2px';div.style.font=style.font;div.style.lineHeight=style.lineHeight;div.style.textAlign=style.textAlign;div.style.color=style.color;
   }
   if(el.classList.contains('content-edit')){const style=getComputedStyle(el);div.style.font=style.font;div.style.lineHeight=style.lineHeight;div.style.color=style.color;div.style.minHeight=Math.max(96,el.scrollHeight)+'px';div.style.width='100%';}
   if(el.classList.contains('profile-input')){const original=el.id?card.querySelector('#'+el.id):null;if(original){const style=getComputedStyle(original);div.style.font=style.font;div.style.color=style.color;div.style.lineHeight=style.lineHeight;}div.style.borderBottom='0';div.style.minHeight='1.25em';}
@@ -916,8 +945,8 @@ $('download').addEventListener('click',async()=>{
   await new Promise(resolve=>requestAnimationFrame(resolve));
   const width=Math.max(1,Math.ceil(clone.getBoundingClientRect().width));
   const height=Math.max(1,Math.ceil(clone.getBoundingClientRect().height));
-  $('pixelSizeInfo').textContent=`PNG 저장 크기: ${width} × ${height} px`;
-  const canvas=await renderer(clone,{backgroundColor:null,scale:1,width,height,windowWidth:Math.max(document.documentElement.clientWidth,width),useCORS:true,allowTaint:false,logging:false});
+  $('pixelSizeInfo').textContent=`PNG 저장 크기: ${width*exportScale} × ${height*exportScale} px`;
+  const canvas=await renderer(clone,{backgroundColor:null,scale:exportScale,width,height,windowWidth:Math.max(document.documentElement.clientWidth,width),useCORS:true,allowTaint:false,logging:false});
   const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('PNG 파일 변환에 실패했습니다.')), 'image/png'));
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='트친소표.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
  }catch(err){console.error(err);alert('PNG 저장에 실패했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.\n'+(err?.message||''));}
@@ -951,7 +980,7 @@ $('resetAll').addEventListener('click',()=>{
  $('titleDetailPreview').textContent='';messageField.value='';$('freeEditor').value='';fitMessage();
  selectedProfileExtra.clear();renderProfileExtra();
  choices=Object.fromEntries(Object.entries(initialChoices).map(([key,items])=>[key,[...items]]));
- selected={genre:[],tendency:[],fandom:[],mine:[]};
+ selected={genre:[],tendency:[],fandom:[],mine:[],ngMention:[]};
  $('characters').replaceChildren();$('pesoCharacters').replaceChildren();charCount=0;
  applyTheme('olympos');
  $('bgOpacity').dispatchEvent(new Event('input',{bubbles:true}));
