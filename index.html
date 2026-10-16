@@ -399,8 +399,6 @@ input[type=file]{display:none}
 .middle.custom-panels>.fixed-free-top{grid-row:1!important}
 .middle.custom-panels>.fixed-free-bottom{grid-row:2!important}
 .profile-card[data-compact-layout="true"]{min-height:0}
-.profile-card.png-export .card-inner{z-index:2}
-.profile-card.png-export .export-watermark{position:absolute;right:22px;bottom:22px;z-index:1;max-width:45%;color:var(--ink);opacity:.32;font-family:Georgia,"Times New Roman",serif!important;font-size:50px;font-weight:600;font-style:italic;line-height:1;letter-spacing:.16em;white-space:nowrap;text-align:right;pointer-events:none;user-select:none}
 #panelLayoutGroup{position:relative}
 #panelLayoutGroup .panel-layout-details>summary{display:flex;align-items:center;min-height:27px}
 #panelLayoutGroup .panel-layout-details[open]>summary{padding-right:115px!important}
@@ -1014,9 +1012,6 @@ function prepareExportClone(){
   el.replaceWith(div);
  });
  clone.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.removeAttribute('contenteditable');});
- clone.classList.add('png-export');
- const watermark=document.createElement('div');watermark.className='export-watermark';
- watermark.textContent='THEMIS';watermark.setAttribute('aria-hidden','true');clone.appendChild(watermark);
  document.body.appendChild(clone);
  return clone;
 }
