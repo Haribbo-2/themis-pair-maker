@@ -376,6 +376,7 @@ input[type=file]{display:none}
    With a 22px gap between sides, 34% of the full row equals 68% of a side + 7.48px. */
 .character-pair{--paired-image-width:calc(68% - 52.52px);--paired-image-height:100px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:start}
 .character-side{min-width:0}
+.character-side-peso{grid-column:2}
 .character-side-peso .char-actions{justify-content:flex-end}
 #pesoCharacters .character-row{grid-template-columns:minmax(0,1fr) var(--paired-image-width)}
 #pesoCharacters .char-name{text-align:right!important;justify-content:flex-end!important}
@@ -399,6 +400,9 @@ input[type=file]{display:none}
 .middle.custom-panels>.fixed-free-top{grid-row:1!important}
 .middle.custom-panels>.fixed-free-bottom{grid-row:2!important}
 .profile-card[data-compact-layout="true"]{min-height:0}
+.profile-card[data-no-characters="true"]{min-height:0}
+.profile-card[data-no-characters="true"] .card-inner{grid-template-rows:auto auto}
+.profile-card.png-export .card-inner{z-index:2}
 #panelLayoutGroup{position:relative}
 #panelLayoutGroup .panel-layout-details>summary{display:flex;align-items:center;min-height:27px}
 #panelLayoutGroup .panel-layout-details[open]>summary{padding-right:115px!important}
@@ -818,6 +822,16 @@ $('freeEditor').addEventListener('input',e=>{
 });
 fitMessage();
 let charCount=0;
+function syncCharacterVisibility(){
+ const mainEmpty=!$('characters').querySelector('.character-row');
+ const pesoEmpty=!$('pesoCharacters').querySelector('.character-row');
+ $('characters').closest('.character-side').hidden=mainEmpty;
+ $('pesoCharacters').closest('.character-side').hidden=pesoEmpty;
+ const empty=mainEmpty&&pesoEmpty;
+ card.dataset.noCharacters=String(empty);
+ card.querySelector('.bottom').hidden=empty;
+ queuePixelSizeUpdate();
+}
 function fitCharacterName(field){
  field.style.height='auto';
  field.style.height=Math.max(28,field.scrollHeight)+'px';
@@ -860,7 +874,7 @@ function removeCharacterRow(row){
  const image=row.querySelector('.char-image img');
  row.remove();
  renderCharacterCropEditor();
- queuePixelSizeUpdate();
+ syncCharacterVisibility();
 }
 function moveCharacterRow(row,direction){
  const sibling=direction<0?row.previousElementSibling:row.nextElementSibling;
@@ -893,7 +907,7 @@ function addCharacter(side='main'){
   }
   queuePixelSizeUpdate();
  });
- list.append(row);applyCharacterText();renderCharacterCropEditor();refreshCropTargets();queuePixelSizeUpdate();
+ list.append(row);applyCharacterText();renderCharacterCropEditor();refreshCropTargets();syncCharacterVisibility();
 }
 $('addCharacter').addEventListener('click',()=>addCharacter('main'));
 $('addCharacterInline').addEventListener('click',()=>addCharacter('main'));
@@ -932,7 +946,7 @@ function getExportDimensions(){
  // Use the live card's actual rendered size so added characters and long text are included.
  const rect=card.getBoundingClientRect();
  const width=Math.max(designWidth,Math.ceil(Math.max(card.scrollWidth,rect.width)));
- const minimumHeight=card.dataset.compactLayout==='true'?0:designHeight;
+ const minimumHeight=card.dataset.compactLayout==='true'||card.dataset.noCharacters==='true'?0:designHeight;
  const height=Math.max(minimumHeight,Math.ceil(Math.max(card.scrollHeight,rect.height)));
  return {width,height};
 }
@@ -987,7 +1001,7 @@ function createCroppedExportCanvas(img){
 function prepareExportClone(){
  const clone=card.cloneNode(true);
  const {width}=getExportDimensions();
- clone.style.cssText += `;position:fixed!important;left:-100000px!important;top:0!important;width:${width}px!important;max-width:none!important;height:auto!important;min-height:${card.dataset.compactLayout==='true'?0:designHeight}px!important;aspect-ratio:auto!important;overflow:visible!important;margin:0!important;transform:none!important;`;
+ clone.style.cssText += `;position:fixed!important;left:-100000px!important;top:0!important;width:${width}px!important;max-width:none!important;height:auto!important;min-height:${card.dataset.compactLayout==='true'||card.dataset.noCharacters==='true'?0:designHeight}px!important;aspect-ratio:auto!important;overflow:visible!important;margin:0!important;transform:none!important;`;
  const liveCropImages=[...card.querySelectorAll('.avatar img,.char-image img')];
  const cloneCropImages=[...clone.querySelectorAll('.avatar img,.char-image img')];
  liveCropImages.forEach((img,index)=>cloneCropImages[index].replaceWith(createCroppedExportCanvas(img)));
@@ -1012,6 +1026,7 @@ function prepareExportClone(){
   el.replaceWith(div);
  });
  clone.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.removeAttribute('contenteditable');});
+ clone.classList.add('png-export');
  document.body.appendChild(clone);
  return clone;
 }
@@ -1428,7 +1443,7 @@ function restoreDraft(state){
    }
    if(row.querySelector('textarea.char-name'))fitCharacterName(row.querySelector('.char-name'));
   });
-  charCount=Math.max(charCount,state.charCount||0);applyCharacterText();renderCharacterCropEditor();
+  charCount=Math.max(charCount,state.charCount||0);applyCharacterText();renderCharacterCropEditor();syncCharacterVisibility();
   fontAssetId=state.fontAssetId||null;uploadedFontFamily=state.fontFamily||'';
   uploadedFontUrl=draftAssetUrl(fontAssetId);
   $('removeFont').hidden=!uploadedFontUrl;
