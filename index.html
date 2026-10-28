@@ -77,9 +77,9 @@ input[type=file]{display:none}
 .characters{display:flex;flex-direction:column;gap:7px}
 .character-row{display:grid;grid-template-columns:25% minmax(0,1fr) 25%;gap:8px;align-items:stretch;min-height:0}
 .char-image{border:var(--line-width) solid var(--line);background:var(--panel-bg);height:64px;min-height:64px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:pointer}
-.char-image span, .char-image .image-placeholder{position:relative;z-index:2;display:block;font-size:.65em;opacity:.7;text-align:center;pointer-events:none}.char-image img{z-index:1}.char-fields{position:relative;z-index:2;display:flex;align-items:stretch;justify-content:flex-start;min-width:0;overflow:visible}.char-actions{display:flex!important;align-items:center;gap:8px;position:relative;z-index:3}.char-actions button, .remove-char{position:relative;z-index:3;visibility:visible!important;opacity:1!important}.char-name{display:block;position:relative;z-index:2;min-width:0;min-height:64px;height:64px;width:100%;color:var(--ink)!important;opacity:1!important;visibility:visible!important;text-align:left;font-weight:700;background:transparent;}
+.char-image span, .char-image .image-placeholder{position:relative;z-index:2;display:block;font-size:.65em;opacity:.7;text-align:center;pointer-events:none}.char-image img{z-index:1}.char-fields{position:relative;z-index:2;display:flex;align-items:stretch;justify-content:flex-start;min-width:0;overflow:visible}.char-actions{display:flex!important;align-items:center;gap:8px;position:relative;z-index:3}.char-actions button, .remove-char{position:relative;z-index:3;visibility:visible!important;opacity:1!important}.char-name{display:block;position:relative;z-index:2;min-width:0;min-height:64px;height:64px;width:100%;color:var(--ink);opacity:1!important;visibility:visible!important;text-align:left;font-weight:700;background:transparent;}
 .char-fields{display:flex;align-items:center;min-width:0}
-.char-name{width:100%;height:64px;border:0!important;border-bottom:0!important;background:transparent;color:inherit;font:inherit;padding:4px 2px;outline:none;text-align:center}
+.char-name{width:100%;height:64px;border:0!important;border-bottom:0!important;background:transparent;color:var(--ink);font:inherit;padding:4px 2px;outline:none;text-align:center}
 .char-desc{width:100%;border:0;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent);background:transparent;color:inherit;font:inherit;font-size:.9em;resize:vertical;min-height:25px;outline:none}
 .char-actions{display:flex;gap:5px;align-items:center;margin-bottom:6px}
 .char-actions button{font-size:11px;padding:4px 8px}.character-row .remove-char{width:100%;height:64px;align-self:stretch;border:var(--line-width) solid var(--line);border-radius:0;background:var(--panel-bg);color:var(--ink);padding:4px;font-size:.75em}
@@ -507,7 +507,9 @@ input[type=file]{display:none}
 <div class="group">
 <h2>정실 · 페소 이름 스타일</h2>
 <details class="detail-tools"><summary>세부 편집</summary><div class="detail-tools-body">
-<div class="inline"><div class="field"><label for="characterTextSize">글자 크기 (pt)</label><input id="characterTextSize" max="200" min="1" step="1" type="number" value="15"/></div><div class="field"><label for="characterTextColor">글자색</label><div class="color-field"><input aria-label="정실·페소 이름 글자색 코드" id="characterTextHex" type="text" value="#73552b"/><input id="characterTextColor" type="color" value="#73552b"/></div></div></div>
+<div class="field"><label for="characterTextTarget">편집할 캐릭터</label><select id="characterTextTarget"></select></div>
+<div class="field"><label for="characterTextColor">글자색</label><div class="color-field"><input aria-label="정실·페소 이름 글자색 코드" id="characterTextHex" type="text" value="#73552b"/><input id="characterTextColor" type="color" value="#73552b"/></div><label class="size-sync"><input id="characterColorAll" type="checkbox"/> 글자색 통합</label></div>
+<div class="field"><label for="characterTextSize">글자 크기 (pt)</label><input id="characterTextSize" max="200" min="1" step="1" type="number" value="15"/><label class="size-sync"><input id="characterTextSizeAll" type="checkbox"/> 글자 크기 통합</label></div>
 </div></details>
 </div>
 <div class="group">
@@ -605,6 +607,7 @@ function setColor(kind,val){
   card.querySelectorAll('.info-box .section-title, .note .section-title, .note .content-edit, .info-box .content-edit').forEach(el=>el.style.color=val);
   $('nicknamePreview').style.color='';
   $('twitterPreview').style.color='';
+  syncCharacterTextControls();
  }
  if(kind==='bg')updateBackgroundGradient();
 }
@@ -668,14 +671,56 @@ function syncChoiceSizeControls(){
  $('choiceTextColor').value=hex;$('choiceTextHex').value=hex;
 }
 function profileTextTargets(){return [$('nicknamePreview'),$('twitterPreview'),$('agePreview'),$('profileExtraPreview')];}
-function characterTextTargets(){return [...document.querySelectorAll('.char-name')];}
+function characterTextRows(){return [...document.querySelectorAll('.characters .character-row')];}
+function selectedCharacterTextRow(){
+ return characterTextRows().find(row=>row.dataset.char===$('characterTextTarget').value)||null;
+}
+function characterTextTargets(kind){
+ const all=kind==='color'?$('characterColorAll').checked:$('characterTextSizeAll').checked;
+ const rows=all?characterTextRows():[selectedCharacterTextRow()].filter(Boolean);
+ return rows.map(row=>row.querySelector('.char-name'));
+}
+function characterColorHex(value){
+ if(/^#[0-9a-f]{6}$/i.test(value))return value;
+ const rgb=/^rgba?\(\s*(\d+)[, ]+\s*(\d+)[, ]+\s*(\d+)/i.exec(value);
+ return rgb?'#'+rgb.slice(1,4).map(n=>Number(n).toString(16).padStart(2,'0')).join(''):$('inkColor').value;
+}
+function syncCharacterTextControls(){
+ const row=selectedCharacterTextRow(),name=row?.querySelector('.char-name');
+ if(!name)return;
+ $('characterTextSize').value=parseFloat(name.style.fontSize)||15;
+ const color=characterColorHex(name.style.color);
+ $('characterTextColor').value=color;
+ $('characterTextHex').value=color;
+}
+function refreshCharacterTextTargets(preferredId){
+ const select=$('characterTextTarget'),chosen=preferredId||select.value;
+ select.replaceChildren();
+ characterTextRows().forEach(row=>{
+  const option=document.createElement('option'),side=row.dataset.side==='peso'?'페소':($('pesoCharacters')?'정실':'캐릭터');
+  option.value=row.dataset.char;
+  option.textContent=side+' '+([...row.parentElement.children].indexOf(row)+1)+' · '+(row.querySelector('.char-name').value.trim()||'이름 없음');
+  select.append(option);
+ });
+ select.value=[...select.options].some(option=>option.value===chosen)?chosen:(select.options[0]?.value||'');
+ select.disabled=!select.options.length;
+ syncCharacterTextControls();
+}
 // 프로필의 글자 크기는 CSS에 고정합니다. 이 기능은 색상만 바꿉니다.
 function applyProfileColor(){
  const color=$('profileTextColor').value;
  $('profileTextHex').value=color;
  profileTextTargets().forEach(el=>{if(el)el.style.color=color;});
 }
-function applyCharacterText(){applyTextStyle('characterTextSize','characterTextColor','characterTextHex',characterTextTargets());document.querySelectorAll('textarea.char-name').forEach(fitCharacterName);}
+function applyCharacterSize(){
+ const size=ptValue('characterTextSize');if(size===null)return;
+ characterTextTargets('size').forEach(name=>{name.style.fontSize=size+'pt';if(name.tagName==='TEXTAREA')fitCharacterName(name);});
+ queuePixelSizeUpdate();
+}
+function applyCharacterColor(){
+ const color=$('characterTextColor').value;$('characterTextHex').value=color;
+ characterTextTargets('color').forEach(name=>name.style.color=color);
+}
 ['sectionTitleSize','choiceTextSize','freeTextSize'].forEach((id,i)=>$(id).addEventListener('input',[applySectionTitleSize,applyChoiceOptionSize,applyFreeTextSize][i]));
 syncTextHex('choiceTextColor','choiceTextHex',applyChoiceColor);
 $('choiceColorAll').addEventListener('change',e=>{if(e.target.checked)applyChoiceColor();});
@@ -683,7 +728,10 @@ $('sectionTitleSizeAll').addEventListener('change',e=>{if(e.target.checked)apply
 $('choiceTextSizeAll').addEventListener('change',e=>{if(e.target.checked)applyChoiceOptionSize();});
 $('choiceTarget').addEventListener('change',()=>{renderChoiceEditor();syncChoiceSizeControls();});
 syncTextHex('profileTextColor','profileTextHex',applyProfileColor);
-$('characterTextSize').addEventListener('change',applyCharacterText);syncTextHex('characterTextColor','characterTextHex',applyCharacterText);
+$('characterTextSize').addEventListener('input',applyCharacterSize);syncTextHex('characterTextColor','characterTextHex',applyCharacterColor);
+$('characterTextTarget').addEventListener('change',syncCharacterTextControls);
+$('characterColorAll').addEventListener('change',e=>{if(e.target.checked)applyCharacterColor();else syncCharacterTextControls();});
+$('characterTextSizeAll').addEventListener('change',e=>{if(e.target.checked)applyCharacterSize();else syncCharacterTextControls();});
 
 [['ink','ink'],['line','line'],['bg','bg'],['panel','panel']].forEach(([kind])=>{
  $(kind+'Color').addEventListener('input',e=>setColor(kind,e.target.value));
@@ -859,7 +907,7 @@ function renderCharacterCropEditor(){
   heading.append(actions);panel.append(heading);
   const nameField=document.createElement('label');nameField.className='character-name-field';nameField.append('이름');
   const nameInput=document.createElement('input');nameInput.type='text';nameInput.className='character-name-editor';nameInput.value=previewName.value;nameInput.placeholder=kind+' 이름';
-  nameInput.addEventListener('input',()=>{previewName.value=nameInput.value;fitCharacterName(previewName);title.textContent=kind+' · '+(nameInput.value.trim()||(index+'번 칸'));queuePixelSizeUpdate();});
+  nameInput.addEventListener('input',()=>{previewName.value=nameInput.value;fitCharacterName(previewName);title.textContent=kind+' · '+(nameInput.value.trim()||(index+'번 칸'));refreshCharacterTextTargets();queuePixelSizeUpdate();});
   nameField.append(nameInput);panel.append(nameField);
   const section=document.createElement('details');section.className='character-crop-details';section.dataset.char=row.dataset.char;section.open=expanded.has(row.dataset.char);
   const summary=document.createElement('summary');summary.textContent='이미지 위치/크기';section.append(summary);
@@ -873,7 +921,7 @@ function removeCharacterRow(row){
  if(!row)return;
  const image=row.querySelector('.char-image img');
  row.remove();
- renderCharacterCropEditor();
+ renderCharacterCropEditor();refreshCharacterTextTargets();
  syncCharacterVisibility();
 }
 function moveCharacterRow(row,direction){
@@ -882,11 +930,11 @@ function moveCharacterRow(row,direction){
  const list=row.parentElement;
  if(direction<0)list.insertBefore(row,sibling);
  else list.insertBefore(sibling,row);
- renderCharacterCropEditor();
+ renderCharacterCropEditor();refreshCharacterTextTargets();
  queuePixelSizeUpdate();
 }
-function addCharacter(side='main'){
- charCount++;const n=charCount;
+function addCharacter(side='main',restoredId){
+ charCount=restoredId?Math.max(charCount,Number(restoredId)):charCount+1;const n=restoredId||charCount;
  const isPeso=side==='peso',kind=isPeso?'페소':'정실',list=$(isPeso?'pesoCharacters':'characters');
  const row=document.createElement('div');row.className='character-row';row.dataset.char=n;row.dataset.side=side;
  const imageMarkup='<label class="char-image"><span class="image-placeholder">＋<br>이미지 추가</span><input type="file" accept="image/*" hidden></label>';
@@ -905,9 +953,12 @@ function addCharacter(side='main'){
    const index=[...row.parentElement.children].indexOf(row)+1;
    panel.querySelector('.character-panel-heading strong').textContent=kind+' · '+(previewName.value.trim()||(index+'번 칸'));
   }
-  queuePixelSizeUpdate();
+  refreshCharacterTextTargets();queuePixelSizeUpdate();
  });
- list.append(row);applyCharacterText();renderCharacterCropEditor();refreshCropTargets();syncCharacterVisibility();
+ previewName.style.fontSize='15pt';
+ if($('characterTextSizeAll').checked)previewName.style.fontSize=ptValue('characterTextSize')+'pt';
+ if($('characterColorAll').checked)previewName.style.color=$('characterTextColor').value;
+ list.append(row);fitCharacterName(previewName);refreshCharacterTextTargets();renderCharacterCropEditor();refreshCropTargets();syncCharacterVisibility();
 }
 $('addCharacter').addEventListener('click',()=>addCharacter('main'));
 $('addCharacterInline').addEventListener('click',()=>addCharacter('main'));
@@ -1352,7 +1403,7 @@ function captureDraft(){
   preview:{nickname:$('nicknamePreview').value,twitter:$('twitterPreview').value,age:$('agePreview').value,detail:$('titleDetailPreview').textContent},
   profileExtra:[...selectedProfileExtra],profileStyles:Object.fromEntries(['nicknamePreview','twitterPreview','agePreview','profileExtraPreview'].map(id=>[id,$(id).style.cssText])),
   characters:[...document.querySelectorAll('.characters .character-row')].map(row=>{
-   const img=row.querySelector('.char-image img');return {side:row.dataset.side||'main',name:row.querySelector('.char-name').value,
+   const img=row.querySelector('.char-image img');return {side:row.dataset.side||'main',charId:row.dataset.char,name:row.querySelector('.char-name').value,nameStyle:row.querySelector('.char-name').style.cssText,
     assetId:img?.dataset.assetId||null,cropX:img?.dataset.cropX||'50',cropY:img?.dataset.cropY||'50',cropZoom:img?.dataset.cropZoom||'100'};
   }),avatar:{assetId:avatarAssetId,cropX:$('avatar').querySelector('img')?.dataset.cropX||'50',cropY:$('avatar').querySelector('img')?.dataset.cropY||'50',cropZoom:$('avatar').querySelector('img')?.dataset.cropZoom||'100'},
   backgroundAssetId,fontAssetId,fontFamily:uploadedFontFamily,colorStates:{...choiceColorState}};
@@ -1390,6 +1441,7 @@ function restoreDraft(state){
   const controls=state.controls||{};
   $('theme').value=controls.theme||'olympos';applyTheme($('theme').value);
   Object.entries(controls).forEach(([id,value])=>{const el=$(id);if(!el||el.type==='file')return;if(el.type==='checkbox'||el.type==='radio')el.checked=!!value;else el.value=value;});
+  if(controls.characterTextAll){$('characterColorAll').checked=true;$('characterTextSizeAll').checked=true;}
   ['avatarFile','avatarInlineFile','bgImage','fontFile'].forEach(id=>{if($(id))$(id).value='';});
   card.style.cssText=state.cardStyle||'';
   if('backgroundAssetId' in state)backgroundAssetId=state.backgroundAssetId;
@@ -1431,9 +1483,12 @@ function restoreDraft(state){
   selectedProfileExtra.clear();(state.profileExtra||[]).forEach(value=>selectedProfileExtra.add(value));renderProfileExtra();
   document.querySelectorAll('.characters .character-row').forEach(row=>row.remove());charCount=0;
   (state.characters||[]).forEach(data=>{
-   addCharacter(data.side==='peso'?'peso':'main');
+   addCharacter(data.side==='peso'?'peso':'main',data.charId);
    const list=data.side==='peso'&&$('pesoCharacters')?$('pesoCharacters'):$('characters');
    const row=list.lastElementChild;row.querySelector('.char-name').value=data.name||'';
+   const name=row.querySelector('.char-name');
+   if(data.nameStyle!==undefined)name.style.cssText=data.nameStyle;
+   else{const size=Number(controls.characterTextSize);name.style.fontSize=(size>=1&&size<=200?size:15)+'pt';if(/^#[0-9a-f]{6}$/i.test(controls.characterTextColor||''))name.style.color=controls.characterTextColor;}
    const source=draftAssetUrl(data.assetId);
    if(source){
     const label=row.querySelector('.char-image');label.querySelector('.image-placeholder')?.remove();
@@ -1443,7 +1498,7 @@ function restoreDraft(state){
    }
    if(row.querySelector('textarea.char-name'))fitCharacterName(row.querySelector('.char-name'));
   });
-  charCount=Math.max(charCount,state.charCount||0);applyCharacterText();renderCharacterCropEditor();syncCharacterVisibility();
+  charCount=Math.max(charCount,state.charCount||0);refreshCharacterTextTargets(controls.characterTextTarget);renderCharacterCropEditor();syncCharacterVisibility();
   fontAssetId=state.fontAssetId||null;uploadedFontFamily=state.fontFamily||'';
   uploadedFontUrl=draftAssetUrl(fontAssetId);
   $('removeFont').hidden=!uploadedFontUrl;
