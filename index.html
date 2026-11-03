@@ -1143,6 +1143,9 @@ function createCroppedExportCanvas(img){
 }
 function prepareExportClone(){
  const clone=card.cloneNode(true);
+ // Match every cloned field to its connected source before removing export-only controls.
+ const liveFields=[...card.querySelectorAll('input,select,textarea')];
+ const sourceFields=new Map([...clone.querySelectorAll('input,select,textarea')].map((field,index)=>[field,liveFields[index]]));
  const {width}=getExportDimensions();
  clone.style.cssText += `;position:fixed!important;left:-100000px!important;top:0!important;width:${width}px!important;max-width:none!important;height:auto!important;min-height:${card.dataset.compactLayout==='true'||card.dataset.noCharacters==='true'?0:designHeight}px!important;aspect-ratio:auto!important;overflow:visible!important;margin:0!important;transform:none!important;`;
  const liveCropImages=[...card.querySelectorAll('.avatar img,.char-image img')];
@@ -1150,6 +1153,7 @@ function prepareExportClone(){
  liveCropImages.forEach((img,index)=>cloneCropImages[index].replaceWith(createCroppedExportCanvas(img)));
  clone.querySelectorAll('button,input[type=file],.character-crop-editor').forEach(el=>el.remove());
  clone.querySelectorAll('input,select,textarea').forEach(el=>{
+  const sourceField=sourceFields.get(el);
   let value=el.value||'';
   if(el.tagName==='SELECT'){
    const liveSelect=el.id?card.querySelector('#'+el.id):null;
@@ -1164,8 +1168,14 @@ function prepareExportClone(){
    const style=getComputedStyle(live||el),span=document.createElement('span');span.textContent=live?.value||div.textContent;span.style.cssText='min-width:0;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;';div.replaceChildren(span);
    div.style.display='flex';div.style.alignItems='center';div.style.justifyContent=el.closest('#pesoCharacters')?'flex-end':'flex-start';div.style.width='100%';div.style.height=Math.max(100,Math.ceil(live?.offsetHeight||0))+'px';div.style.minHeight='100px';div.style.padding='4px 2px';div.style.font=style.font;div.style.lineHeight=style.lineHeight;div.style.textAlign=style.textAlign;div.style.color=style.color;
   }
-  if(el.classList.contains('content-edit')){const style=getComputedStyle(el);div.style.font=style.font;div.style.lineHeight=style.lineHeight;div.style.color=style.color;div.style.minHeight=Math.max(el.closest('.ng-section')?46:96,el.scrollHeight)+'px';div.style.width='100%';}
+  if(el.classList.contains('content-edit')){const style=getComputedStyle(sourceField);div.style.font=style.font;div.style.lineHeight=style.lineHeight;div.style.color=style.color;div.style.minHeight=Math.max(el.closest('.ng-section')?46:96,sourceField.scrollHeight)+'px';div.style.width='100%';}
   if(el.classList.contains('profile-input')){const original=el.id?card.querySelector('#'+el.id):null;if(original){const style=getComputedStyle(original);div.style.font=style.font;div.style.color=style.color;div.style.lineHeight=style.lineHeight;}div.style.borderBottom='0';div.style.minHeight='1.25em';}
+  // Copy individual font properties: a detached clone or an empty font shorthand
+  // must not reset the saved size to the parent/default size.
+  const sourceStyle=getComputedStyle(sourceField);
+  for(const property of ['font-family','font-size','font-weight','font-style','font-stretch','font-variant','line-height','letter-spacing','word-spacing','text-align','text-transform','color']){
+   const value=sourceStyle.getPropertyValue(property);if(value)div.style.setProperty(property,value);
+  }
   el.replaceWith(div);
  });
  clone.querySelectorAll('[contenteditable="true"]').forEach(el=>{el.removeAttribute('contenteditable');});
